@@ -1,24 +1,20 @@
-import logo from './logo.svg';
+import { useSelector } from 'react-redux';
+import SetupForm from './components/screens/SetupForm';
+import GameScreen from './components/screens/GameScreen';
+
 import './App.css';
 
+
+
 function App() {
+  const gameInfo = useSelector(state => state.questions);
+  console.log(gameInfo.length);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {gameInfo.length === 0 && <SetupForm />}
+      {gameInfo.length > 0 ? <p>TEST</p> : ''}
+    </>
   );
 }
 
