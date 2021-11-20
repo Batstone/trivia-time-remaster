@@ -7,13 +7,14 @@ import './App.css';
 
 
 function App() {
-  const gameInfo = useSelector(state => state.questions);
-  console.log(gameInfo.length);
+  const playerInfo = useSelector(state => state.playerInfo);
+  const gameReadyCheck = useSelector(state => state.gameReady);
+
 
   return (
     <>
-      {gameInfo.length === 0 && <SetupForm />}
-      {gameInfo.length > 0 ? <p>TEST</p> : ''}
+      {!playerInfo.length && <SetupForm />}
+      {gameReadyCheck && <GameScreen />}
     </>
   );
 }

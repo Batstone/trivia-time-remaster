@@ -1,12 +1,22 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { gameInfoActions } from "../../store/gameInfo-slice";
+
+import CurrentQuestion from "../game/CurrentQuestion";
+import Timer from "../game/Timer";
+import Button from "../UI/Button";
 
 const GameScreen = () => {
-    const questions = useSelector(state => state.questions);
-    const playerInfo = useSelector(state => state.playerInfo);
+    const [currentPlayer, setCurrentPlayer] = useState(1);
+
+    const dispatch = useDispatch();
 
     return (
-        <p>GAME SCREEN</p>
+        <div>
+            <Timer />
+            <CurrentQuestion />
+        </div>
+
     );
 };
 

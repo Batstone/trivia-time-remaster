@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Player from '../../models/player';
 
 import SelectCategory from "../UI/SelectCategory";
 import NumberOfPlayers from "../UI/NumberOfPlayers";
-
 import Button from "../UI/Button";
+
+import classes from './SetupForm.module.css';
 
 import { gameInfoActions } from "../../store/gameInfo-slice";
 import { getQuestionData } from "../../store/gameInfo-actions";
@@ -48,15 +50,11 @@ const Setup = () => {
     };
 
     const onChangeHandler = (e, index) => {
-        // setPlayerNames(prevState => [...state])
-
         let names = [...playerNames];
 
         names[index] = e.target.value;
 
         setPlayerNames(names);
-
-        console.log(names);
     };
 
     const onSubmitHandler = (e) => {
@@ -64,22 +62,20 @@ const Setup = () => {
 
         // Checking to see if all player names have been entered
         if (playerNames.indexOf('') === -1) {
-            let playerInfo = [];
+            const playerInfo = playerNames.map((playerName, index) => {
+                return {
+                    id: index + 1,
+                    name: playerName,
+                    avatar: avatars[index],
+                    questions: [],
+                    score: 0
+                };
+            });
 
-            for (let i = 0; i < playerNames.length; i++) {
-
-                // Set up the info for each player
-                playerInfo.push({
-                    Name: playerNames[i],
-                    Avatar: avatars[i],
-                    Score: 0
-                })
-            }
-
-            // Set the player info to redux global state
+            // // Set the player info to redux global state
             dispatch(gameInfoActions.setPlayerInfo(playerInfo));
 
-            // Length of the player names to get the total number of players
+            // // Length of the player names array to get the total number of players
             dispatch(getQuestionData(playerNames.length, categorySelection));
         };
     };
@@ -87,16 +83,20 @@ const Setup = () => {
     return (
         <form onSubmit={e => onSubmitHandler(e)}>
             <NumberOfPlayers numberOfPlayers={numberOfPlayersHandler} />
-            <SelectCategory categorySelection={categorySelectionHandler} />
-            {numberOfPlayers ? avatars.map((avatar, index) => {
-                return (
-                    <div key={avatar} >
-                        <img src={avatar} alt="The player avatar" />
-                        <label htmlFor={`playerName${index}`}>Player Name:</label>
-                        <input id={`playerName${index}`} onChange={e => onChangeHandler(e, index)} />
-                    </div>
-                );
-            }) : ''}
+            {<SelectCategory categorySelection={categorySelectionHandler} />}
+            <div className={classes.names}>
+                {avatars.map((avatar, index) => {
+                    return (
+                        <div key={avatar} className={classes.card} >
+                            <div className={classes['name-img-container']}>
+                                <img src={avatar} alt="The player avatar" />
+                            </div>
+                            <label htmlFor={`playerName${index}`}>Player Name:</label>
+                            <input id={`playerName${index}`} onChange={e => onChangeHandler(e, index)} value={playerNames[index]} />
+                        </div>
+                    );
+                })}
+            </div>
             <Button>PLAY!</Button>
         </form>
     )
